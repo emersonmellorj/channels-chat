@@ -1,0 +1,146 @@
+##################################
+## Aplicacoes em Real time
+##################################
+
+- Sao aplicacoes em que compartilham dados de uma ponta a outra 
+- Dado saindo de um ponto estara disponivel no outro ponto no menor tempo possível.
+
+Por exemplo: Um chat
+
+Iremos utilizar o banco de dados Redis
+
+1 - Criar ambiente virtual primeiramente
+    python3 -m venv realtime . ---> Criar ambiente virtual
+    . bin/activate ---> Ativar ambiente virtual
+
+2 - Instalar as bibliotecas:
+    pip install django django-channels django-boootstrap4 channels-redis
+
+3 - Criar o requirements.txt com o pip freeze
+
+4 - Criar o projeto:
+    django-admin startproject realtime .
+
+5 - Criar o App:
+    django-admin startapp chat
+
+6 - Ir em settings e fazer as configuracoes necessarias.
+    INSTALLED_APPS = [
+        'bootstrap4',
+        'channels',
+        'chat',
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+    ]
+
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+    # Especifica do channels
+    ASGI_APPLICATION = 'realtime.routing.application' # Para aplicacoes realtime
+
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                'hosts': [('127.0.0.1', 6379)]
+            }
+        }
+    } # Estou dizendo que o Redis sera a base que ira concetrar os dados do Chat
+
+7 - Configurando as rotas e preparando para o websocket:
+    websocket - iteracao entre o navegador e a nossa aplicacao para haver uma comunicacao real time.
+
+    Criar o arquivo de rotas em chats (urls.py)
+        from django.urls import path
+
+        from .views import IndexView, SalaView
+
+        urlpatterns = [
+            path('', IndexView.as_view(), name='index'),
+            path('chat/<str:nome_sala/>', SalaView.as_view(), name='sala'),
+        ]
+
+    Criar um arquivo de rotas para o channel:
+        arquivo: routing.py
+
+        from django.urls import re_path
+
+        # Fara a ponte entre o navegador e nossa aplicacao
+        from .consumers import ChatConsumer
+
+        websocket_urlpatterns = [
+            re_path(r'ws/chat/(?P<nome_sala>\w+)/$', ChatConsumer),
+        ]
+
+8 - Ir no arquivo de rotas do projeto e cadastrar:
+
+    from django.contrib import admin
+    from django.urls import path, include
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('', include('chat.urls')),
+    ]
+
+9 - Criar o arquivo routing.py tb no projeto realtime:
+
+    from channels.routing import ProtocolTypeRouter, URLRouter
+    from channels.auth import AuthMiddlewareStack
+
+    from chat.routing import websocket_urlpatterns
+
+    application = ProtocolTypeRouter({
+        'websocket': AuthMiddlewareStack(
+            URLRouter(
+                websocket_urlpatterns
+            )
+        ),
+    })
+
+
+10 - Configurar as views do app:
+    from django.shortcuts import render
+    from django.views.generic import TemplateView
+    from django.utils.safestring import mark_safe # Remove qualquer inseguranca na string, transformando ela em segura
+
+    import json
+
+    class IndexView(TemplateView):
+        template_name = 'index.html'
+
+
+    class SalaView(TemplateView):
+        template_name = 'sala.html'
+
+        def get_context_data(self, **kwargs):
+            context = super(SalaView, self).get_context_data(**kwargs)
+            context["nome_sala_json"] = mark_safe(
+                json.dumps(self.kwargs['nome_sala']) # Transformando o texto em JSON
+            ) 
+            return context
+        
+11 - Desenvolver os templates.
+
+12 - Criar o consumer - elo de ligação entre o navegador e nossa aplicacao.
+    criar no diretorio chat o arquivo consumers.py
+
+13 - Subir o Redis:
+
+    OBS: Preciso ter o Redis instalado na maquina.
+
+    redis-server /usr/local/etc/redis.conf
+
+    Parar o Redis:
+        redis-cli shutdown
+    
+    Realizar o migrate na base.
+
+    Subir o nosso servidor de desenvolvimento.
