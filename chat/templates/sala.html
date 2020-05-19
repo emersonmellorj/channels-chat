@@ -1,61 +1,80 @@
+{% load static %}
 {% load bootstrap4 %}
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" class="">
 <head>
-    <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
-    <title>Geek Chat</title>
-    {% bootstrap_css %}
+    <meta charset='UTF-8'>
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+
+    <!-- <script src='https://production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script>
+    <script src='https://production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script>
+    <script src='https://production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script> -->
+    
+    <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+    <link rel="canonical" href="https://codepen.io/emilcarlsson/pen/ZOQZaV?limit=all&page=74&q=contact+" />
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet' type='text/css'>
+
+    <script src="https://use.typekit.net/hoy3lrg.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+    
+    <link href="{% static 'css/style.css' %}" rel="stylesheet prefetch">
+
 </head>
-<body>
-    <div class="container">
-        <br>
-        <h3>Sala {{nome_sala_json}}</h3>
-        <p>{{request.user}}</p>
-        <textarea id="sala" cols="70" class="form-control" rows="20"></textarea><br/>
-        <input id="texto" name="texto" class="form-control" type="text" size="70"><br/>
-        {% buttons %}
-            <input type="button" id="botao" value="Enviar" class="btn btn-success" />
-        {% endbuttons %}
+
+<body id="corpo" class="corpo" data-sala="{{ nome_sala_json }}" data-username="{{request.user.username}}" 
+        data-image="{{usuario.perfil_image.url}}">    
+    <!-- 
+        A concept for a chat interface. 
+
+        Follow me here:
+        Twitter: https://twitter.com/thatguyemil
+        Codepen: https://codepen.io/emilcarlsson/
+        Website: http://emilcarlsson.se/
+
+        Codigo do chat: https://bootsnipp.com/snippets/exR5v
+    -->
+
+    <div id="frame">
+
+        <div id="sidepanel">
+
+            {% include 'profile.html' %}            
+            {% include 'search.html' %}
+            {% include 'contacts.html' %}
+            {% include 'bottom_bar.html' %}
+            
+        </div>
+        
+        <div class="content">
+
+            {% include 'content_profile.html' %}
+            {% include 'messages.html' %}
+            {% include 'message_input.html' %}
+            
+        </div>
+
     </div>
-    {% bootstrap_javascript jquery='full' %}
 
-    <script>
-        const nome_sala = {{ nome_sala_json }};
-        const chatSocket = new WebSocket(
-            'ws://' + window.location.host + 
-            '/ws/chat/' + nome_sala + '/'
-        );
-
-        chatSocket.onmessage = function(event) {
-            const dados = JSON.parse(event.data);
-            const mensagem = dados["mensagem"];
-            document.querySelector('#sala').value += (mensagem + '\n');
-        };
-
-        chatSocket.onclose = function(event) {
-            console.error('O chat encerrou de forma inesperada.');
-        };
-
-        document.querySelector('#texto').focus();
-
-        document.querySelector('#texto').onkeyup = function(event) {
-            if(event.keycode === 13) {
-                document.querySelector('#botao').click();
-            }
-        };
-
-        document.querySelector('#botao').onclick = function(event) {
-            const mensagemInput = document.querySelector('#texto');
-            const mensagem = mensagemInput.value;
-            chatSocket.send(JSON.stringify({
-                'mensagem': mensagem
-            }));
-            mensagemInput.value = '';
-        };
-    </script>
+    <script src='https://production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
+    
+    <!-- Pegando o CSRF Token para o JS resgatar -->
+    {% csrf_token %}
+    <input type="hidden" name="csrfmiddlewaretoken" id="token" value="{{ csrf_token }}">
+    
+    <script src="{% static 'js/javascript.js' %}"></script>
 
 </body>
 </html>

@@ -129,6 +129,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Especifica do channels
 ASGI_APPLICATION = 'realtime.routing.application' # Para aplicacoes realtime
 
+# Declare layer that uses Redis as our channel layer
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -137,3 +138,9 @@ CHANNEL_LAYERS = {
         }
     }
 } # Estou dizendo que o Redis sera a base que ira concetrar os dados do Chat
+
+AUTH_USER_MODEL = 'chat.CustomUser' # nome_aplicacao.Model
+
+LOGIN_REDIRECT_URL = 'index'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

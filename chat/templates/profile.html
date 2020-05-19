@@ -1,0 +1,62 @@
+{% load static %}
+
+<div id="profile">  
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'error' %}
+                <div class="alert alert-danger d-inline-flex p-2" 
+                    role="alert" style="background-color:crimson; color:floralwhite; margin-left:80px">{{message}}</div>
+            {% else %}
+                <div class="alert alert-{{message.tags}} d-inline-flex p-2" 
+                    role="alert" style="background-color: limegreen; color:floralwhite; margin-left:80px">{{message}}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="wrap">
+        {% for user_logado in user_logados %}
+            {% if user_logado.username == request.user.username %}
+                <img id="profile-img" src="{{usuario.perfil_image.url}}" class="{{user_logado.status}}" alt="" />
+            {% endif %}
+        {% endfor %}
+        <p>{{usuario.username}}</p>
+        <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+        <div id="status-options" data-status="{{usuario.status}}">
+            <ul>
+                <!--class="active"-->
+            
+                <li id="status-online"><span class="status-circle"></span> <p>Online</p></li>
+                <li id="status-away" class=status><span class="status-circle"></span> <p>Away</p></li>
+                <li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
+                <li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+            </ul>
+        </div>
+        
+        <div id="expanded">
+            <label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
+            <input name="twitter" type="text" value="mikeross" />
+            <label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
+            <input name="twitter" type="text" value="ross81" />
+            <label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
+            <input name="twitter" type="text" value="mike.ross" />
+        </div>
+    </div>
+
+    {% comment %} <script>
+        var status = '';
+        status = "{{usuario.status}}";
+        console.log(status);
+
+        if(status === "online"){
+            $("#status-online").addClass("active")
+        }else if(status === "away"){
+            $("#status-away").addClass("active")
+        }else if(status === "busy"){
+            $("#status-busy").addClass("active")
+        }else{
+            $("#status-offline").addClass("active")
+        }
+    </script> {% endcomment %}
+    
+</div>

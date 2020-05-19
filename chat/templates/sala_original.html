@@ -1,0 +1,138 @@
+{% load bootstrap4 %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <title>Geek Chat</title>
+    {% bootstrap_css %}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <h3>Sala {{nome_sala_json}}</h3>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger d-inline-flex p-2" 
+                        role="alert" style="background-color:crimson; color:floralwhite">{{message}}</div>
+                {% else %}
+                    <div class="alert alert-{{message.tags}} d-inline-flex p-2" 
+                        role="alert" style="background-color: limegreen; color:floralwhite">{{message}}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            <p><strong>Eu sou:</strong> {{usuario}}<br/>
+            <strong>Logado desde:</strong> {{logged_at}}<br/>
+            <strong>Usuários logados:</strong> {{logados}}</p>
+
+            <textarea id="sala" cols="70" class="form-control" rows="10" style="color: darkslateblue; font-style: italic;"></textarea><br/>
+            
+            <div id="app">
+                <input id="texto" @input="consultarQuandoParar($event)" name="texto" class="form-control" type="text" size="70" placeholder="Sua mensagem ..."><br/>
+            </div>
+
+            {% buttons %}
+                <input type="button" id="botao" value="Enviar" class="btn btn-success" />
+            {% endbuttons %}
+
+            <span id="message"></span>
+
+
+        {% else %}
+            <textarea id="sala" cols="70" class="form-control" rows="10" style="color: darkslateblue; font-style: italic;" disabled></textarea><br/>
+            <input id="texto" name="texto" class="form-control" type="text" size="70" placeholder="Sua mensagem ..." disabled><br/>
+                {% buttons %}
+                    <input type="button" id="sair" value="Enviar" class="btn btn-success" disabled/>
+                {% endbuttons %}
+
+        {% endif %}
+        
+        
+    </div>
+    {% bootstrap_javascript jquery='full' %}
+
+    <script>
+
+    var app = new Vue({
+        delimiters: ['[[', ']]'],
+        el: '#app',
+        methods: {
+            consultarQuandoParar: function consultarQuandoParar($event) {
+            
+                // Se chamar mais de uma vez, cancela a chamada anterior
+                document.querySelector('#message').innerHTML = 'Estou digitando...';
+                console.log('digitou');
+                clearTimeout(consultarQuandoParar.timeout);
+                
+                consultarQuandoParar.timeout = setTimeout(function () {
+                    /*document.querySelector('#message').innerHTML = 'parou de digitar e o resultado é '+ $event.target.value;*/
+                    document.querySelector('#message').innerHTML = '';
+                    console.log('parou de digitar e o resultado é "%s"', $event.target.value);
+                }, 500);
+            }
+        }
+    
+    })
+    </script>
+
+    <script>
+        document.querySelector('#sala').value = "";
+        const nome_sala = {{nome_sala_json}};
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + 
+            '/ws/chat/' + nome_sala + '/'
+        );
+
+        chatSocket.onopen = function(event) {
+            /*chatSocket.send(JSON.stringify({
+                'mensagem': "Socket aberto para {{usuario}}"
+            }));*/
+            console.log('Websocket open para {{usuario}}')
+        }
+
+        chatSocket.onmessage = function(event) {
+            const dados = JSON.parse(event.data);
+            console.log(dados);
+            const mensagem = dados["mensagem"];
+            document.querySelector('#sala').value += (mensagem + '\n');
+        };
+
+        chatSocket.onclose = function(event) {
+            const mensagem = 'O chat encerrou de forma inesperada.';
+            document.querySelector('#sala').value += (mensagem + '\n');
+            console.error('O chat encerrou de forma inesperada.');
+
+            const chatSocket = new ReconnectingWebSocket(
+            'ws://' + window.location.host + 
+            '/ws/chat/' + nome_sala + '/'
+            );
+        };
+
+        document.querySelector('#texto').focus();
+
+        document.querySelector('#texto').onkeypress = function(event) {
+            if(event.keyCode === 13) {
+                document.querySelector('#botao').click();
+            }
+        };
+
+        document.querySelector('#botao').onclick = function(event) {
+            const mensagemInput = document.querySelector('#texto');
+            const mensagem = mensagemInput.value;
+            chatSocket.send(JSON.stringify({
+                'mensagem': "{{usuario}}: " + mensagem
+            }));
+            mensagemInput.value = '';
+        };
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% load static %}
+
+<div id="contacts">
+    <ul>
+        {% for logado in user_logados %}
+
+            {% if logado.username == request.user.username %}
+                <li class="contact active">
+            {% else %}
+                <li class="contact">
+            {% endif %}
+                
+                <div class="wrap">
+                    <span class="contact-status {{logado.status}}"></span>
+                    <img src="{{usuario.perfil_image.url}}" alt="" />
+                    <div class="meta">
+                        <p class="name">{{logado.username}}</p>
+                        <p class="preview">Estou aqui.</p>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}  
+            <!-- <span class="contact-status busy"></span> -->	
+        </li>
+    </ul>
+</div>

@@ -4,8 +4,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Geek Chat</title>
     {% bootstrap_css %}
 </head>
@@ -22,10 +22,9 @@
     {% bootstrap_javascript jquery='full' %}
 
     <script>
-
         document.querySelector('#nome_sala').focus();
         document.querySelector('#nome_sala').onkeyup = function(event) {
-            if(event.KeyCode === 13){
+            if(event.keyCode === 13){
                 document.querySelector('#botao').click();
             }
         };
@@ -40,7 +39,7 @@
                 document.querySelector('#nome_sala').focus();
             }
         };
-
     </script>
+    
 </body>
 </html>
