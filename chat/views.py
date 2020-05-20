@@ -16,7 +16,6 @@ json.dumps() takes in a json object and returns a string.
 """
 
 def update_status(request, nome_sala, *args, **kwargs):
-
     status = request.get_full_path().split('?')[1].split('&')[0].split('=')[1]
     print(status)
 
@@ -32,6 +31,19 @@ def update_status(request, nome_sala, *args, **kwargs):
 
     print(usuario.status)
     return HttpResponse(msg)
+
+
+def get_image_other_user(request, nome_sala):
+    """
+    Funcao que ira resgatar a url da foto da pessoa que esta mandando mensagem no chat
+    """
+    other_user_chat = request.get_full_path().split('?')[1].split('&')[0].split('=')[1].replace('%40','@')
+    print(f'Other User Name: {other_user_chat}')
+
+    if request.method == 'GET':
+        other_user_image = get_user_model().objects.get(username=other_user_chat).perfil_image.url
+        print(other_user_image)
+        return HttpResponse(other_user_image)
 
 
 class IndexView(TemplateView):
@@ -68,20 +80,11 @@ class SalaView(TemplateView):
         )
 
         if self.request.user.is_authenticated:
-            context["usuario"] = get_user_model().objects.get(username=self.request.user.username)
-            context["logged_at"] = get_object_or_404(LoggedUser, username=self.request.user).logged_at
-            context["logados"] = ', '.join([u.username for u in LoggedUser.objects.all()])
+            #context["usuario"] = get_user_model().objects.get(username=self.request.user.username)
+            context["usuarios"] = get_user_model().objects.all()
+            #context["logged_at"] = get_object_or_404(LoggedUser, username=self.request.user).logged_at
+            #context["logados"] = ', '.join([u.username for u in LoggedUser.objects.all()])
             context['user_logados'] = LoggedUser.objects.all()
 
         print(context)
         return context
-
-
-"""
-This is an example view in views.py that shows all logged users
-"""
-# from django.shortcuts import render    
-# def logged(request):
-#     logged_users = LoggedUser.objects.all().order_by('username')
-#     context = {'logged_users': logged_users}
-#     return render('users/logged.html', context)

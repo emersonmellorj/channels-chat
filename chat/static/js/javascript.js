@@ -89,7 +89,7 @@ function newMessage() {
     }));
     
     $('.message-input input').val(null);
-    $('.contact.active .preview').html('<span>You: </span>' + message);
+    $('.contact.active .preview').html('<span>Você: </span>' + message);
     $(".messages").animate({ scrollTop: $(document).height() }, "fast");
     
 };
@@ -121,13 +121,41 @@ chatSocket.onmessage = function(event) {
     const mensagem = dados["mensagem"];
     const author = dados['author'];
     console.log(author)
+
+    var data = new Date();
+    h=data.getHours();
+    m=data.getMinutes();
+    s=data.getSeconds();
+    var hora_local = h + ":" + m + ":" + s
+    console.log(hora_local);
     
     if(author === usuario){
         $('<li class="sent"><img src="' + perfil_image + '" alt="" /><p>' + 
-            mensagem + '</p></li>').appendTo($('.messages ul'));      
+            mensagem + '<br><span>' + hora_local + '</span></p></li>').appendTo($('.messages ul'));
+        $('.contact.active .preview').html('<span>Você: </span>' + message);
+        $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+            
     } else {
-        $('<li class="replies"><img src="'+ perfil_image +'" alt="" /><p>' + 
-            mensagem + '</p></li>').appendTo($('.messages ul'));
+
+        // Resgatando a foto do outro usuario que mandou a mensagem no chat
+        const other_user_chat = author
+        $(function(){
+            $.ajax({
+                url: "get_image_other_user",
+                type: "get",
+                data: {
+                    other_user_chat: other_user_chat,
+                },
+                success: function(other_user_image){
+                    $('<li class="replies"><img src="'+ other_user_image +'" alt="" /><p>' + 
+                        mensagem + '<br><span>' + hora_local + '</span></p></li>').appendTo($('.messages ul'));
+                    console.log('Resgate da foto de perfil realizada com sucesso!')
+                }
+            });
+        });
+
+        $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+        
     }
     
 };

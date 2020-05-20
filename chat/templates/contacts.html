@@ -12,7 +12,11 @@
                 
                 <div class="wrap">
                     <span class="contact-status {{logado.status}}"></span>
-                    <img src="{{usuario.perfil_image.url}}" alt="" />
+                    {% for usuario in usuarios %}
+                        {% if usuario.username == logado.username %}
+                            <img src="{{usuario.perfil_image.url}}" alt="" />
+                        {% endif %}
+                    {% endfor %}
                     <div class="meta">
                         <p class="name">{{logado.username}}</p>
                         <p class="preview">Estou aqui.</p>

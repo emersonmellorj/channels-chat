@@ -691,6 +691,11 @@ height: calc(100% - 177px);
     color: #f5f5f5;
 }
 
+#frame .content .messages ul li.sent p span{
+    color: darkgrey;
+    font-size: 12px;
+}
+
 #frame .content .messages ul li.replies img {
     float: right;
     margin: 6px 0 0 8px;
@@ -699,6 +704,11 @@ height: calc(100% - 177px);
 #frame .content .messages ul li.replies p {
     background: #f5f5f5;
     float: right;
+}
+
+#frame .content .messages ul li.replies p span{
+    color: darkgrey;
+    font-size: 12px;
 }
 
 #frame .content .messages ul li img {

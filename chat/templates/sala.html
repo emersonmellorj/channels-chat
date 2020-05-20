@@ -34,8 +34,12 @@
 
 </head>
 
-<body id="corpo" class="corpo" data-sala="{{ nome_sala_json }}" data-username="{{request.user.username}}" 
-        data-image="{{usuario.perfil_image.url}}">    
+{% for usuario in usuarios %}
+    {% if usuario.username == request.user.username %}
+        <body id="corpo" class="corpo" data-sala="{{ nome_sala_json }}" data-username="{{request.user.username}}" 
+            data-image="{{usuario.perfil_image.url}}"> 
+    {% endif %}
+{% endfor %}
     <!-- 
         A concept for a chat interface. 
 

@@ -67,7 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 "username": self.scope["user"].username,
-                'message': f"{self.scope['user']} {mensagem} {data_br}"
+                'message': f"{mensagem}"
             }
         )
 

@@ -16,13 +16,16 @@
 
     <div class="wrap">
         {% for user_logado in user_logados %}
-            {% if user_logado.username == request.user.username %}
-                <img id="profile-img" src="{{usuario.perfil_image.url}}" class="{{user_logado.status}}" alt="" />
-            {% endif %}
+            {% for usuario in usuarios %}
+                {% if user_logado.username == usuario.username and user_logado.username == request.user.username %}
+                    <img id="profile-img" src="{{usuario.perfil_image.url}}" class="{{user_logado.status}}" alt="" />
+                    <p>{{usuario.username}}</p>
+                {% endif %}
+            {% endfor %}
         {% endfor %}
-        <p>{{usuario.username}}</p>
+
         <i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
-        <div id="status-options" data-status="{{usuario.status}}">
+        <div id="status-options" data-status="">
             <ul>
                 <!--class="active"-->
             
