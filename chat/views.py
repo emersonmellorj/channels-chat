@@ -15,6 +15,17 @@ json.loads() takes in a string and returns a json object.
 json.dumps() takes in a json object and returns a string.
 """
 
+def get_online_users(request, nome_sala):
+    data_logged = LoggedUser.objects.all()
+    data_logged_user = list()
+    if request.method == 'GET':
+        for user_logged in data_logged:
+            data_logged_user += [(f"username: {user_logged.username}", f"status: {user_logged.status}", f"image: {user_logged.perfil_image}")]        
+            users_online = json.dumps(data_logged_user)
+            print(users_online)
+        return HttpResponse(users_online)
+
+
 def update_status(request, nome_sala, *args, **kwargs):
     status = request.get_full_path().split('?')[1].split('&')[0].split('=')[1]
     print(status)

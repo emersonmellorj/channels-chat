@@ -71,6 +71,7 @@ class CustomUser(AbstractUser):
 class LoggedUser(models.Model):
     username = models.CharField(max_length=30, primary_key=True)
     status = models.CharField(max_length=30, default='active')
+    perfil_image = models.CharField(max_length=300, default='')
     logged_at = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -78,7 +79,9 @@ class LoggedUser(models.Model):
 
 def login_user(sender, request, user, **kwargs):
     user_logged = LoggedUser(username=user.username)
-    user_logged.status='online'
+    user_logged.status = 'online'
+    user_logged.perfil_image = user.perfil_image
+    print(f'Perfil Image on Login: {user_logged.perfil_image}')
     user_logged.save()
     usuarios_logados()
     

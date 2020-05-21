@@ -3,28 +3,57 @@
 <div id="contacts">
     <ul>
         {% for logado in user_logados %}
-
             {% if logado.username == request.user.username %}
                 <li class="contact active">
             {% else %}
                 <li class="contact">
             {% endif %}
-                
+            
                 <div class="wrap">
                     <span class="contact-status {{logado.status}}"></span>
-                    {% for usuario in usuarios %}
-                        {% if usuario.username == logado.username %}
-                            <img src="{{usuario.perfil_image.url}}" alt="" />
-                        {% endif %}
-                    {% endfor %}
+                        {% for usuario in usuarios %}
+                            {% if usuario.username == logado.username %}
+                                <img id="foto_menor" src="{{usuario.perfil_image.url}}" alt="" />
+                            {% endif %}
+                        {% endfor %}
                     <div class="meta">
                         <p class="name">{{logado.username}}</p>
                         <p class="preview">Estou aqui.</p>
                     </div>
                 </div>
             </li>
-        {% endfor %}  
-            <!-- <span class="contact-status busy"></span> -->	
+        {% endfor %}<!-- <span class="contact-status busy"></span> -->
         </li>
     </ul>
 </div>
+
+<script>
+
+setInterval(atualizaStatus, 5000);
+
+function atualizaStatus() {
+    $('#contacts ul').empty();
+    $(function(){
+        $.ajax({
+            url: "get_online_users",
+            type: "get",
+            data: {
+            },
+            success: function(users_online){
+                var online = JSON.parse(users_online)
+                for (var [indice, valores] of Object.entries(online)) {
+                    $('<li class="contact"><div class="wrap"><span class="contact-status ' + valores[1].split(':')[1] + '"></span><img id="foto_menor" src="/media/' + valores[2].split(':')[1].trim() + '" alt="" /><div class="meta"><p class="name">' + valores[0].split(':')[1] + '</p><p class="preview">Estou aqui.</p></div></div></li></li>').appendTo($('#contacts ul'));
+                };
+            } 
+
+        });   
+    
+    });
+
+}
+
+
+
+</script>
+
+
