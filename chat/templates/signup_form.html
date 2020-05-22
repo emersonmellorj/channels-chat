@@ -1,0 +1,33 @@
+{% load bootstrap4 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit-no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Django Chat</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href={% static 'css/style.css' %} rel="stylesheet">
+</head>
+<body>
+    <div id="container">
+        <div id="row">
+        <img class="mb-5 rounded mx-auto d-block mt-5" src="{% static 'img/grupo.png' %}" alt="" width="72" height="72">
+        <h3><strong>Cadastro de Usuário:</strong></h3>
+        {% bootstrap_messages %}
+            <form action = "{% url 'signup' %}" method="post" class="form" autocomplete="False" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                <button type="submit" class="btn btn-success">Salvar</button>
+                {% endbuttons %}
+            </form>
+        </div>
+        </div>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/jquery/3.2.1/jquery.min.js"></script>
+</body>
+</html>
+

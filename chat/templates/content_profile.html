@@ -7,7 +7,9 @@
             <p>{{usuario.username}}</p>
         {% endif %}
     {% endfor %}
+    
     <div class="social-media">
+        <a href="{% url 'logout' %}"><input id="logout" class="btn btn-danger btn-sm" type="button" value="Logout"></a>
         <i class="fa fa-facebook" aria-hidden="true"></i>
         <i class="fa fa-twitter" aria-hidden="true"></i>
         <i class="fa fa-instagram" aria-hidden="true"></i>

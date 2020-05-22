@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django import forms
 
 from .models import CustomUser
 
@@ -6,7 +7,7 @@ class CustomUserCreateForm(UserCreationForm):
     
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'perfil_image')
+        fields = ('username', 'first_name', 'last_name', 'perfil_image')
         labels = {'username': 'Username/E-mail'}
 
     def save(self, commit=True):
@@ -17,6 +18,9 @@ class CustomUserCreateForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class SignUpForm(CustomUserCreateForm):
+    pass
 
 
 class CustomUserChangeForm(UserChangeForm):

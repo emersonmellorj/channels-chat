@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
 from django.utils.safestring import mark_safe # Remove qualquer inseguranca na string, transformando ela em segura
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, authenticate
 from django.http import HttpResponse
+from django.urls import reverse_lazy
 
 from .models import LoggedUser, CustomUser
+
+from .forms import CustomUserCreateForm, SignUpForm
 
 import json
 
@@ -28,19 +31,13 @@ def get_online_users(request, nome_sala):
 
 def update_status(request, nome_sala, *args, **kwargs):
     status = request.get_full_path().split('?')[1].split('&')[0].split('=')[1]
-    print(status)
-
     if request.method == 'GET':
-        print(f'{request.user}')
-
         usuario = LoggedUser.objects.get(username=request.user)
         usuario.status=status
         usuario.save()
         msg = 'success'
     else:
         msg = 'error'
-
-    print(usuario.status)
     return HttpResponse(msg)
 
 
@@ -50,11 +47,26 @@ def get_image_other_user(request, nome_sala):
     """
     other_user_chat = request.get_full_path().split('?')[1].split('&')[0].split('=')[1].replace('%40','@')
     print(f'Other User Name: {other_user_chat}')
-
     if request.method == 'GET':
         other_user_image = get_user_model().objects.get(username=other_user_chat).perfil_image.url
-        print(other_user_image)
         return HttpResponse(other_user_image)
+
+
+class SigUpView(CreateView):
+    model = CustomUser
+    form_class = SignUpForm
+    template_name = 'signup_form.html'
+    success_url = reverse_lazy('login')
+
+    # Metodo de FormView
+    def form_valid(self, form, *args, **kwargs):
+        messages.success(self.request, 'Conta criada sucesso!')
+        return super(SigUpView, self).form_valid(form, *args, **kwargs) # Status Code 302
+
+    # Metodo de FormView
+    def form_invalid(self, form, *args, **kwargs):
+        messages.error(self.request, 'Erro na criação da conta!')
+        return super(SigUpView, self).form_invalid(form, *args, **kwargs) # Status Code 200
 
 
 class IndexView(TemplateView):
@@ -89,13 +101,7 @@ class SalaView(TemplateView):
             #json.dumps(self.kwargs['nome_sala']) # Transformando JSON recebido em string (objeto pythonico)
             self.kwargs['nome_sala']
         )
-
         if self.request.user.is_authenticated:
-            #context["usuario"] = get_user_model().objects.get(username=self.request.user.username)
             context["usuarios"] = get_user_model().objects.all()
-            #context["logged_at"] = get_object_or_404(LoggedUser, username=self.request.user).logged_at
-            #context["logados"] = ', '.join([u.username for u in LoggedUser.objects.all()])
             context['user_logados'] = LoggedUser.objects.all()
-
-        print(context)
         return context

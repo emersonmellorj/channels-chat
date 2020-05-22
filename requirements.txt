@@ -17,6 +17,7 @@ dj-static==0.0.6
 Django==3.0.6
 django-bootstrap4==1.1.1
 django-channels==0.7.0
+django-debug-toolbar==2.2
 django-stdimage==5.1.1
 hiredis==1.0.1
 hyperlink==19.0.0

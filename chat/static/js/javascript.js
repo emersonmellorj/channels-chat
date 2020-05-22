@@ -54,11 +54,8 @@ $("#status-options ul li").click(function() {
         status = '';
     };
 
-    //console.log(status)
-
     // Preciso chamar uma view para atualizar o valor do status na tabela LoggedUser
     var csrf_token = document.querySelector("#token").value;
-    //console.log(csrf_token)
     $(function(){
         $.ajax({
             url: "status",

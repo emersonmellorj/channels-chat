@@ -7,14 +7,42 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: #27ae60;
     font-family: "proxima-nova", "Source Sans Pro", sans-serif;
     font-size: 1em;
     letter-spacing: 0.1px;
-    color: #32465a;
+    color: #95a5a6;
     text-rendering: optimizeLegibility;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
     -webkit-font-smoothing: antialiased;
+    background: #0264d6; /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover,  #0264d6 1%, #1c2b5a 100%); /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%,#0264d6), color-stop(100%,#1c2b5a)); /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* IE10+ */
+    background: radial-gradient(ellipse at center,  #0264d6 1%,#1c2b5a 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0264d6', endColorstr='#1c2b5a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    width:100%;
+}
+
+label{
+    color: #f5f5f5;
+}
+
+.paragrafo {
+    color: #f5f5f5;
+}
+
+h1, h2, h3, h4{
+    color: #f5f5f5;
+}
+
+.form-control-file{
+
+}
+
+.text-muted {
+    color: #95a5a6 !important;
 }
 
 #frame {
@@ -704,6 +732,7 @@ height: calc(100% - 177px);
 #frame .content .messages ul li.replies p {
     background: #f5f5f5;
     float: right;
+    color: #243140;
 }
 
 #frame .content .messages ul li.replies p span{
@@ -806,4 +835,34 @@ height: calc(100% - 177px);
 
 #frame .content .message-input .wrap button:focus {
     outline: none;
+}
+
+.link {
+    color:floralwhite; 
+    text-decoration:none;
+    background-color: crimson;
+    padding: 5px;
+    border-radius: 0.3em;
+}
+
+.link:hover{
+    text-decoration: none;
+    color: palegoldenrod;
+}
+
+.link-cad{
+    color:floralwhite; 
+    text-decoration:none;
+    background-color: limegreen;
+    padding: 5px;
+    border-radius: 0.3em;
+}
+
+.link-cad:hover{
+    text-decoration: none;
+    color: palegoldenrod;
+}
+
+h3{
+    color: #E6EAEA;
 }
