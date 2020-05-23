@@ -37,10 +37,6 @@ h1, h2, h3, h4{
     color: #f5f5f5;
 }
 
-.form-control-file{
-
-}
-
 .text-muted {
     color: #95a5a6 !important;
 }
@@ -730,9 +726,9 @@ height: calc(100% - 177px);
 }
 
 #frame .content .messages ul li.replies p {
-    background: #f5f5f5;
+    background-color: white;
     float: right;
-    color: #243140;
+    color: #202020;
 }
 
 #frame .content .messages ul li.replies p span{

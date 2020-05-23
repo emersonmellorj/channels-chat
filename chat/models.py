@@ -72,6 +72,7 @@ class LoggedUser(models.Model):
     username = models.CharField(max_length=30, primary_key=True)
     status = models.CharField(max_length=30, default='active')
     perfil_image = models.CharField(max_length=300, default='')
+    room_name = models.CharField(max_length=50, default='')
     logged_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __unicode__(self):

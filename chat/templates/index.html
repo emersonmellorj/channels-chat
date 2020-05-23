@@ -15,19 +15,33 @@
 <body>
     <div class="container">
         <br>
-        <img class="mb-4" src="{% static 'img/grupo.png' %}" alt="" width="72" height="72">
+        <img class="mb-4" src="{% static 'img/grupo.png' %}" alt="" width="72" height="72"><br>
         {% if request.user.is_authenticated %}
-            <div class="alert alert-success" role="alert">
-                Olá <strong>{{request.user.username}}</strong>, seja bem vindo(a).
+            <div class="alert alert-success d-inline-flex p-2" role="alert" style="background-color: limegreen; color:floralwhite;">
+                Olá &nbsp;<strong>{{request.user.username}}</strong>, seja bem vindo(a).
             </div>
+            <p><a href="{% url 'password_change' %}" class="link">Alterar senha</a><br><br>
         {% else %}
-            <div class="alert alert-danger" role="alert">
-                Você não está <a href="{% url 'login' %}" class="alert-link">logado</a>, com isso não conseguirá interagir com o chat.
+            <div class="alert alert-danger d-inline-flex p-2" role="alert" style="background-color:crimson; color:floralwhite;">
+                Você não está &nbsp;<a href="{% url 'login' %}" class="alert-link">logado</a>, com isso não conseguirá interagir com o chat.
             </div>
         {% endif %}
         <h2>Django Chat</h2>
-        <p class="paragrafo">Qual sala de chat você gostaria de entrar?</p><br/>
-        <input id="nome_sala" name="nome_sala" type="text" class="form-control" size="100" placeholder="Nome da sala ..."><br/><br/>
+        <p class="paragrafo">Qual sala de chat você gostaria de entrar?</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert alert-danger d-inline-flex p-2" 
+                        role="alert" style="background-color:crimson; color:floralwhite;">{{message}}</div><br>
+                {% else %}
+                    <div class="alert alert-{{message.tags}} d-inline-flex p-2" 
+                        role="alert" style="background-color: limegreen; color:floralwhite;">{{message}}</div><br>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <br/><input id="nome_sala" name="nome_sala" type="text" class="form-control" size="100" placeholder="Nome da sala ..."><br/><br/>
         {% buttons %}
             <input id="botao" class="btn btn-primary" type="button" value="Entrar no chat">
             {% if not request.user.is_authenticated %}
