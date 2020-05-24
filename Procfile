@@ -1,1 +1,1 @@
-web: uvicorn realtime.asgi:chat
+web: uvicorn realtime.asgi
