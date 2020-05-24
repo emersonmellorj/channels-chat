@@ -10,6 +10,7 @@ cffi==1.14.0
 channels==2.4.0
 channels-redis==2.4.2
 chardet==3.0.4
+click==7.1.2
 constantly==15.1.0
 cryptography==2.9.2
 daphne==2.5.0
@@ -20,8 +21,9 @@ django-bootstrap4==1.1.1
 django-channels==0.7.0
 django-debug-toolbar==2.2
 django-stdimage==5.1.1
-gunicorn==20.0.4
+h11==0.9.0
 hiredis==1.0.1
+httptools==0.1.1
 hyperlink==19.0.0
 idna==2.9
 incremental==17.5.0
@@ -46,4 +48,7 @@ static3==0.7.0
 Twisted==20.3.0
 txaio==20.4.1
 urllib3==1.25.9
+uvicorn==0.11.5
+uvloop==0.14.0
+websockets==8.1
 zope.interface==5.1.0
