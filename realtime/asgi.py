@@ -11,7 +11,10 @@ import os
 
 from django.core.asgi import get_asgi_application
 from dj_static import Cling, MediaCling
+from channels.layers import get_channel_layer
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'realtime.settings')
+
+channel_layer = get_channel_layer()
 
 application = Cling(MediaCling(get_asgi_application()))
