@@ -1,1 +1,1 @@
-web: uvicorn realtime.asgi --log-file -
+web: uvicorn realtime.asgi:chat
