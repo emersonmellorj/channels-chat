@@ -51,5 +51,5 @@ Twisted==20.3.0
 txaio==20.4.1
 urllib3==1.25.9
 uvloop==0.14.0
-websockets==8.1
+websockets==9.1
 zope.interface==5.1.0
